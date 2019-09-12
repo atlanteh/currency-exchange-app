@@ -9,12 +9,14 @@ import { Line } from 'react-chartjs-2';
 const useStyles = makeStyles(theme => ({
   container:  {
       position: 'relative',
+      padding: 0,
   },
   toggleBtn: {
     flex: 1
   },
   toggleBtnGroup: {
     width: '100%',
+    overflow: 'auto',
   },
   graph: {
     marginTop: 20,

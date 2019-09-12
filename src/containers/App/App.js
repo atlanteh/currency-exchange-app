@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     height: '100%',
   },
+  gridItem: {
+    padding: 0,
+  }
 }));
 
 function App({onMount}) {
@@ -46,12 +49,12 @@ function App({onMount}) {
           direction="row"
           justify="center"
         >
-          <Grid item md={8} xs={12}>
+          <Grid item md={8} xs={12} className={classes.gridItem}>
             <Container className={classes.section}>
               <Tabs items={tabItems} />
             </Container>
           </Grid>
-          <Grid item md={4} xs={12}>
+          <Grid item md={4} xs={12} className={classes.gridItem}>
             <Container className={classes.section}>
               <TodayRates className={classes.todayRates} />
             </Container>

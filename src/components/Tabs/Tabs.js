@@ -38,6 +38,11 @@ const useStyles = makeStyles(theme => ({
   },
   panel: {
     padding: '10px 30px',
+  },
+  '@media (max-width: 768px)': {
+    panel: {
+      padding: 0,
+    },
   }
 }));
 
