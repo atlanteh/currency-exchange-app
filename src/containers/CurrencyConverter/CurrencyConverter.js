@@ -91,7 +91,7 @@ function RateSummary({selectedRates, rateRatio, lastUpdate}) {
   return (
       <>
         <Typography>{t('yourRate')}</Typography>
-        <Typography>1 {source.currency} = {rateRatio} {target.currency}</Typography>
+        <Typography variant="h6">1 {source.currency} = {rateRatio} {target.currency}</Typography>
         <Typography>{t('lastUpdatedAt')} {lastUpdate.toDateString()}</Typography>
       </>
     );

@@ -36,6 +36,9 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  panel: {
+    padding: '10px 30px',
+  }
 }));
 
 export default function Tabs({items, className = ''}) {
@@ -55,7 +58,11 @@ export default function Tabs({items, className = ''}) {
       </AppBar>
       {items.map((item, index) => {
           const Comp = item.component;
-          return (<TabPanel index={index} key={item.title} value={value}><Comp /></TabPanel>);
+          return (
+            <TabPanel index={index} key={item.title} value={value} className={classes.panel}>
+              <Comp />
+            </TabPanel>
+          );
       })}
     </div>
   );

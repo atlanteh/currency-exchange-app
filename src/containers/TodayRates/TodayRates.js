@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     padding: 10,
   },
   ratesWrapper: {
-    marginTop: 20,
+    marginTop: 40,
   },
   todayRates: {
     flex: 1,
@@ -21,12 +21,20 @@ const useStyles = makeStyles(theme => ({
   row: {
     justifyContent: 'space-between',
     display: 'flex',
-    marginBottom: 10,
+    marginBottom: 15,
+    padding: 0,
+    paddingBottom: 15,
+    '&:not(:last-of-type)': {
+      borderBottom: `1px solid ${theme.palette.divider}`
+    }
   },
   flag: {
     marginRight: 10,
     width: 33,
     height: 22,
+  },
+  currencyWrap: {
+    display: 'inline-flex',
   }
 }));
 
@@ -43,7 +51,7 @@ function TodayRates({className, sourceRate, todaysRates}) {
       <Container className={classes.ratesWrapper}>
         {todaysRates.map(r => (
           <Container key={r.currency} className={classes.row}>
-            <span>
+            <span className={classes.currencyWrap}>
               <Flag currency={r.currency} className={classes.flag} />
               {r.currency}
             </span>

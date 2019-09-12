@@ -16,11 +16,13 @@ const useStyles = makeStyles(theme => ({
   grid: {
     flexGrow: 1,
   },
-  tabs: {
-    flex: 2,
-  },
   todayRates: {
     flex: 1,
+  },
+  section: {
+    border: '1px solid gray',
+    padding: 0,
+    height: '100%',
   },
 }));
 
@@ -44,11 +46,15 @@ function App({onMount}) {
           direction="row"
           justify="center"
         >
-          <Grid item md={8}>
-            <Tabs items={tabItems} className={classes.tabs} />
+          <Grid item md={8} xs={12}>
+            <Container className={classes.section}>
+              <Tabs items={tabItems} />
+            </Container>
           </Grid>
-          <Grid item md={4}>
-            <TodayRates className={classes.todayRates} />
+          <Grid item md={4} xs={12}>
+            <Container className={classes.section}>
+              <TodayRates className={classes.todayRates} />
+            </Container>
           </Grid>
         </Grid>
       </Container>
