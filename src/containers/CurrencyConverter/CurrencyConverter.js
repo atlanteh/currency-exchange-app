@@ -3,6 +3,7 @@ import { Container, TextField, Grid, Select, MenuItem, Divider, Typography } fro
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import Flag from 'components/Flag';
+import config from 'config/config';
 
 const useStyles = makeStyles(theme => ({
   container:  {
@@ -36,7 +37,7 @@ const useStyles = makeStyles(theme => ({
       margin: '30px 0px',
   },
   flag: {
-    marginLeft: 10,
+    marginRight: 10,
   },
 }));
 
@@ -62,6 +63,7 @@ function CurrencyFieldset({rates, title, className, onChange, value, amountReadO
                     InputProps={{
                         readOnly: amountReadOnly,
                     }}
+                    inputProps={{step: config.amountStep}}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -73,9 +75,13 @@ function CurrencyFieldset({rates, title, className, onChange, value, amountReadO
                     onChange={(e) => onChange({...value, currency: e.target.value})}
                     variant="outlined"
                     className={classes.select}
-                    renderValue={val => <div>{val}<Flag className={classes.flag} currency={val} /></div>}
                 >
-                    {rates.map(r => (<MenuItem key={r.currency} value={r.currency}>{r.currency}</MenuItem>))}
+                    {rates.map(r => (
+                      <MenuItem key={r.currency} value={r.currency}>
+                        <Flag className={classes.flag} currency={r.currency} />
+                        {r.currency}
+                      </MenuItem>
+                    ))}
                 </Select>
             </Grid>
           </Grid>
