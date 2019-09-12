@@ -24,7 +24,12 @@ export default (state = initialValue, action) => {
         nextState = {...state, loadingRates: true};
         break;
     case ActionTypes.FETCH_RATES_SUCCESS:
-        nextState = {...state, loadingRates: false, rates: payload.rates, lastUpdate: new Date(payload.date)};
+        nextState = {
+            ...state,
+            loadingRates: false,
+            rates: {...payload.rates, EUR: 1},
+            lastUpdate: new Date(payload.date)
+        };
         break;
     case ActionTypes.FETCH_RATES_FAILURE:
         nextState = {...state, loadingRates: false, rates: null};

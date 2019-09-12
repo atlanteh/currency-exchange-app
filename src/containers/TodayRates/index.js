@@ -1,1 +1,1 @@
-export {default} from './TodayRates';
+export {default} from './todaysRatesRedux';

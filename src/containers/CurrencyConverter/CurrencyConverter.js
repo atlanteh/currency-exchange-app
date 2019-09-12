@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, TextField, Grid, Select, MenuItem, Divider, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
+import Flag from 'components/Flag';
 
 const useStyles = makeStyles(theme => ({
   container:  {
@@ -33,6 +34,9 @@ const useStyles = makeStyles(theme => ({
   },
   divider: {
       margin: '30px 0px',
+  },
+  flag: {
+    marginLeft: 10,
   },
 }));
 
@@ -69,6 +73,7 @@ function CurrencyFieldset({rates, title, className, onChange, value, amountReadO
                     onChange={(e) => onChange({...value, currency: e.target.value})}
                     variant="outlined"
                     className={classes.select}
+                    renderValue={val => <div>{val}<Flag className={classes.flag} currency={val} /></div>}
                 >
                     {rates.map(r => (<MenuItem key={r.currency} value={r.currency}>{r.currency}</MenuItem>))}
                 </Select>

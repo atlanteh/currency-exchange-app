@@ -29,8 +29,8 @@ function App({onMount}) {
   const classes = useStyles();
   const { t } = useTranslation();
   const tabItems = [
-    {title: t('historicalRates'), component: HistoricalRates},
     {title: t('currencyConverter'), component: CurrencyConverter},
+    {title: t('historicalRates'), component: HistoricalRates},
   ];
 
   return (

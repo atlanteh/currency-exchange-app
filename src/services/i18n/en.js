@@ -8,4 +8,5 @@ export default {
     lastUpdatedAt: 'Last Updated',
     lastMonth: 'Last Month',
     lastNMonths: 'Last {{count}} Months',
+    todaysRates: 'Today\'s Rates',
 }

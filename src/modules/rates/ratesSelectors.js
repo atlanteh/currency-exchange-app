@@ -75,3 +75,31 @@ export const selectedHistoryRangeSelector = createSelector(historyToggleSelector
         });
         return result;
     })
+
+export const todaysRatesCurrencieSelector = createSelector(selectedSourceSelector, selectedtargetSelector,
+    (source, target) => {
+        if (!source || !target) {
+            return [];
+        }
+        const defatulRates = config.defaultTodayRates;
+        const currencies = defatulRates.map(r => r === source.currency ? 'USD' : r);
+
+        if (source.currency !== 'ILS' && target.currency !== 'ILS') {
+            currencies[currencies.length - 1] = 'ILS'
+        }
+        return currencies;
+    }
+)
+
+export const todaysRatesSelector = createSelector(todaysRatesCurrencieSelector, sourceRateSelector, ratesMapSelector,
+    (todaysCurrencies, sourceRate, ratesMap) => {
+        if (!sourceRate) {
+            return [];
+        }
+        return todaysCurrencies.map(tc => {
+            const targetRate = ratesMap[tc];
+            const rate = roundCurrency(targetRate / sourceRate.rate, config.ratioStep);
+            return {currency: tc, rate};
+        })
+    }
+)
