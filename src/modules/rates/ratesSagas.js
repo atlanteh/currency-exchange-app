@@ -43,7 +43,8 @@ function* fetchHistoryRange() {
         }
         const {data} = yield call(axios.get, 'history', {params});
         
-        yield put(Actions.FETCH_HISTORY_RANGE_SUCCESS({rates: data.rates, key: monthsBackCount}));
+        const key = symbols + monthsBackCount;
+        yield put(Actions.FETCH_HISTORY_RANGE_SUCCESS({rates: data.rates, key}));
     } catch (err) {
         console.error(err);
         yield put(Actions.FETCH_HISTORY_RANGE_FAILURE(err));
@@ -66,5 +67,5 @@ export default [
     takeLatest(AppActionTypes.APP_MOUNTED, fetchRates),
     takeLatest(CurrencyConverterTypes.UPDATE_RATES, updateRates),
     takeLatest(HistoricalRatesTypes.UPDATE_HISTORY_RANGE_TOGGLE, updateHistoricalRates),
-    takeLatest(HistoricalRatesTypes.HISTORY_RANGE_MOUNTED, fetchHistoryRange),
+    takeLatest([HistoricalRatesTypes.HISTORY_RANGE_MOUNTED, HistoricalRatesTypes.REFRESH_GRAPH], fetchHistoryRange),
 ]

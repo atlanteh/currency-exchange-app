@@ -59,7 +59,23 @@ export const selectedRatesSelector = createSelector(rawSelectedRatesSelector, so
     return {...selectedRates, target: {...selectedRates.target, amount: targetAmount}};
 });
 
-export const selectedHistoryRangeSelector = createSelector(historyToggleSelector, historyRangeMapSelector,
-    (toggleMonthCount, historyRangeMap) => {
-        return historyRangeMap[toggleMonthCount];
+export const selectedHistoryRangeSelector = createSelector(historyToggleSelector, historyRangeMapSelector, rawSelectedRatesSelector,
+    (toggleMonthCount, historyRangeMap, selectedRates) => {
+        const {source, target} = selectedRates;
+        if (!source || !target) {
+            return null;
+        }
+        const range = historyRangeMap[`${source.rate.currency},${target.rate.currency}${toggleMonthCount}`];
+
+        if (!range) {
+            return null;
+        }
+        const sourceKey = source.rate.currency;
+        const targetKey = target.rate.currency;
+        const result = Object.keys(range).map(key => {
+            const item = range[key];
+            const ratio = item[targetKey] / item[sourceKey];
+            return {key, ratio};
+        });
+        return result;
     })
