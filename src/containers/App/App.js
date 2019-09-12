@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
   },
   section: {
-    border: '1px solid gray',
+    border: `1px solid ${theme.palette.grey[400]}`,
     padding: 0,
     height: '100%',
   },
