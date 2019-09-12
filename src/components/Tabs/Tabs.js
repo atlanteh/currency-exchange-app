@@ -53,12 +53,10 @@ export default function Tabs({items, className = ''}) {
             {items.map(i => (<Tab key={i.title} label={i.title} />))}
         </MUITabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
+      {items.map((item, index) => {
+          const Comp = item.component;
+          return (<TabPanel index={index} key={item.title} value={value}><Comp /></TabPanel>);
+      })}
     </div>
   );
 }

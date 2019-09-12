@@ -14,7 +14,6 @@ const useStyles = makeStyles(theme => ({
 
 function TodayRates({className}) {
   const classes = useStyles();
-  const { t } = useTranslation();
 
   return (
     <div className={className}>

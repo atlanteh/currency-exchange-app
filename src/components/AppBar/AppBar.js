@@ -11,6 +11,7 @@ const useStyles = makeStyles(theme => ({
       flexGrow: 1,
       padding: 10,
       fontSize: 28,
+      textAlign: 'center'
     },
   }));
 
@@ -20,9 +21,9 @@ export default function AppBar({title}) {
     return (
         <div className={classes.root}>
         <MIAppBar position="sticky">
-        <Typography variant="h6" className={classes.title}>
-            {title}
-        </Typography>
+            <Typography variant="h6" className={classes.title}>
+                {title}
+            </Typography>
         </MIAppBar>
         </div>
     );

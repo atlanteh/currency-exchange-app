@@ -1,7 +1,10 @@
-import {put, takeLatest, call} from 'redux-saga/effects';
-import {Actions} from 'modules/rates';
+import {put, takeLatest, call, select, take, fork} from 'redux-saga/effects';
+import {Actions, ActionTypes, Selectors} from 'modules/rates';
 import axios from 'services/axios';
-import {ActionTypes as GapStepActionTypes} from 'containers/gapstep';
+import {ActionTypes as AppActionTypes} from 'containers/App/appActions';
+import {ActionTypes as CurrencyConverterTypes} from 'containers/CurrencyConverter';
+import {ActionTypes as HistoricalRatesTypes} from 'containers/HistoricalRates';
+import { formatDateLexicographically } from 'utils/cunversionUtils';
 
 function* fetchRates() {
     yield put(Actions.FETCH_RATES_REQUEST());
@@ -15,7 +18,53 @@ function* fetchRates() {
     }
 }
 
+function* fetchHistoryRange() {
+    try {
+        const historyRange = yield select(Selectors.selectedHistoryRangeSelector);
+        if (historyRange) {
+            return;
+        }
+        yield put(Actions.FETCH_HISTORY_RANGE_REQUEST());
+
+        const rates = yield select(Selectors.ratesSelector);
+        if (!rates.length) {
+            yield take(ActionTypes.FETCH_RATES_SUCCESS);
+        }
+        const {source, target} = yield select(Selectors.selectedRatesSelector);
+        const monthsBackCount = yield select(Selectors.historyToggleSelector);
+        const symbols = `${source.rate.currency},${target.rate.currency}`
+        const endAt = new Date();
+        const startAt = new Date(endAt.getFullYear(), endAt.getMonth() - monthsBackCount, endAt.getDate());
+
+        const params = {
+            symbols,
+            start_at: formatDateLexicographically(startAt),
+            end_at: formatDateLexicographically(endAt),
+        }
+        const {data} = yield call(axios.get, 'history', {params});
+        
+        yield put(Actions.FETCH_HISTORY_RANGE_SUCCESS({rates: data.rates, key: monthsBackCount}));
+    } catch (err) {
+        console.error(err);
+        yield put(Actions.FETCH_HISTORY_RANGE_FAILURE(err));
+    }
+}
+
+function* updateRates(action) {
+    // Seperate UI logic from Reducer logic
+    yield put(Actions.RATES_UPDATED(action.payload));
+}
+
+function* updateHistoricalRates(action) {
+    // Seperate UI logic from Reducer logic
+    yield put(Actions.HISTORICAL_RANGE_TOGGLE_UPDATED(action.payload));
+    yield fork(fetchHistoryRange);
+}
+
 
 export default [
-    takeLatest(GapStepActionTypes.GAP_STEP_MOUNT, fetchRates),
+    takeLatest(AppActionTypes.APP_MOUNTED, fetchRates),
+    takeLatest(CurrencyConverterTypes.UPDATE_RATES, updateRates),
+    takeLatest(HistoricalRatesTypes.UPDATE_HISTORY_RANGE_TOGGLE, updateHistoricalRates),
+    takeLatest(HistoricalRatesTypes.HISTORY_RANGE_MOUNTED, fetchHistoryRange),
 ]
