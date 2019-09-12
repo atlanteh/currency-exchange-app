@@ -1,12 +1,15 @@
 import { createSelector } from 'reselect';
 import config from 'config/config';
-import { roundCurrency } from 'utils/cunversionUtils';
+import { roundCurrency, floorCurrency } from 'utils/cunversionUtils';
 
 export const sliceSelector = (state) => state.rates;
 export const ratesMapSelector = createSelector(sliceSelector, slice => slice.rates || {});
 export const lastUpdateSelector = createSelector(sliceSelector, slice => slice.lastUpdate);
 export const historyToggleSelector = createSelector(sliceSelector, slice => slice.historyRangeToggle);
 export const historyRangeMapSelector = createSelector(sliceSelector, slice => slice.historyRangeMap);
+
+export const selectedSourceSelector = createSelector(sliceSelector, slice => slice.selectedRates.source);
+export const selectedtargetSelector = createSelector(sliceSelector, slice => slice.selectedRates.target);
 
 export const ratesSelector = createSelector(ratesMapSelector, rates => {
     const ratesResult = Object.keys(rates).map(k => ({
@@ -16,33 +19,26 @@ export const ratesSelector = createSelector(ratesMapSelector, rates => {
     return ratesResult;
 });
 
-const rawSelectedRatesSelector = createSelector(sliceSelector, ratesSelector, (slice, rates) => {
-    if (!rates.length) {
-        return {};
-    }
-    if (slice.selectedRates) {
-        return slice.selectedRates;
-    }
-
-    const defaultSource = rates.find(r => r.currency.toLowerCase() === config.defaultSourceRate.toLowerCase());
-    const defaultTarget = rates.find(r => r.currency.toLowerCase() === config.defaultTargetRate.toLowerCase());
-    
-    return {
-        source: {rate: defaultSource, amount: '1000.00'},
-        target: {rate: defaultTarget},
-    };
+export const sourceRateSelector = createSelector(ratesMapSelector, selectedSourceSelector, (rates, selected) => {
+    const rate = rates[selected.currency];
+    return rate && {...selected, rate};
 });
 
-export const sourceTargetRatioSelector = createSelector(rawSelectedRatesSelector, ratesMapSelector, (selectedRates, ratesMap) => {
-    
-    const {source, target} = selectedRates;
+export const targetRateSelector = createSelector(ratesMapSelector, selectedtargetSelector, (rates, selected) => {
+    const rate = rates[selected.currency];
+    return rate && {...selected, rate};
+});
+
+const rawSelectedRatesSelector = createSelector(sourceRateSelector, targetRateSelector, (source, target) => {
+    return {source, target};
+});
+
+export const sourceTargetRatioSelector = createSelector(sourceRateSelector, targetRateSelector, (source, target) => {
     if (!source || !target) {
         return -1;
     }
 
-    const sourceRate = ratesMap[source.rate.currency];
-    const targetRate = ratesMap[target.rate.currency];
-    const conversionRate = roundCurrency(targetRate / sourceRate);
+    const conversionRate = roundCurrency(target.rate / source.rate, config.ratioStep);
     
     return conversionRate;
 });
@@ -55,7 +51,7 @@ export const selectedRatesSelector = createSelector(rawSelectedRatesSelector, so
     }
 
     const rawTargetAmount = (parseFloat(selectedRates.source.amount, 10) * rateRatio);
-    const targetAmount = roundCurrency(rawTargetAmount);
+    const targetAmount = floorCurrency(rawTargetAmount, config.amountStep);
     return {...selectedRates, target: {...selectedRates.target, amount: targetAmount}};
 });
 
@@ -65,16 +61,16 @@ export const selectedHistoryRangeSelector = createSelector(historyToggleSelector
         if (!source || !target) {
             return null;
         }
-        const range = historyRangeMap[`${source.rate.currency},${target.rate.currency}${toggleMonthCount}`];
+        const range = historyRangeMap[`${source.currency},${target.currency}${toggleMonthCount}`];
 
         if (!range) {
             return null;
         }
-        const sourceKey = source.rate.currency;
-        const targetKey = target.rate.currency;
+        const sourceKey = source.currency;
+        const targetKey = target.currency;
         const result = Object.keys(range).map(key => {
             const item = range[key];
-            const ratio = item[targetKey] / item[sourceKey];
+            const ratio = roundCurrency(item[targetKey] / item[sourceKey], config.ratioStep);
             return {key, ratio};
         });
         return result;

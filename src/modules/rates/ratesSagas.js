@@ -32,7 +32,7 @@ function* fetchHistoryRange() {
         }
         const {source, target} = yield select(Selectors.selectedRatesSelector);
         const monthsBackCount = yield select(Selectors.historyToggleSelector);
-        const symbols = `${source.rate.currency},${target.rate.currency}`
+        const symbols = `${source.currency},${target.currency}`
         const endAt = new Date();
         const startAt = new Date(endAt.getFullYear(), endAt.getMonth() - monthsBackCount, endAt.getDate());
 

@@ -1,8 +1,13 @@
 import {ActionTypes} from './ratesActions';
+import config from 'config/config';
 
 const initialValue = {
     historyRangeMap: {},
     historyRangeToggle: '1',
+    selectedRates: {
+        source: {currency: config.defaultSourceRate, amount: '1000.00'},
+        target: {currency: config.defaultTargetRate, amount: '0.00'},
+    }
 }
 
 const mergeHistoryRange = (state, payload) => {

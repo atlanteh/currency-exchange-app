@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 function CurrencyFieldset({rates, title, className, onChange, value, amountReadOnly}) {
     const classes = useStyles();
-    const {amount, rate = {}} = value || {};
+    const {amount, currency} = value || {};
     return (
         <Grid
             container
@@ -56,7 +56,7 @@ function CurrencyFieldset({rates, title, className, onChange, value, amountReadO
                     type="number"
                     className={classes.textField}
                     InputProps={{
-                        readOnly: amountReadOnly
+                        readOnly: amountReadOnly,
                     }}
                     InputLabelProps={{
                         shrink: true,
@@ -65,8 +65,8 @@ function CurrencyFieldset({rates, title, className, onChange, value, amountReadO
             </Grid>
             <Grid item xs={8}>
                 <Select
-                    value={rate.currency}
-                    onChange={(e) => onChange({...value, rate: rates.find(r => r.currency === e.target.value)})}
+                    value={currency}
+                    onChange={(e) => onChange({...value, currency: e.target.value})}
                     variant="outlined"
                     className={classes.select}
                 >
@@ -86,7 +86,7 @@ function RateSummary({selectedRates, rateRatio, lastUpdate}) {
   return (
       <>
         <Typography>{t('yourRate')}</Typography>
-        <Typography>1 {source.rate.currency} = {rateRatio} {target.rate.currency}</Typography>
+        <Typography>1 {source.currency} = {rateRatio} {target.currency}</Typography>
         <Typography>{t('lastUpdatedAt')} {lastUpdate.toDateString()}</Typography>
       </>
     );

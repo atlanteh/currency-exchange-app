@@ -30,7 +30,7 @@ function HistoryGraph({data, selectedRates}) {
   const labels = data.map(d => d.key)
   const lineData = data.map(d => d.ratio)
 
-  const graphLabel = `${selectedRates.source.rate.currency} vs ${selectedRates.target.rate.currency}`
+  const graphLabel = `${selectedRates.source.currency} vs ${selectedRates.target.currency}`
 
   return (
     <div className={classes.graph}>

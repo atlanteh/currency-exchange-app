@@ -3,5 +3,6 @@ export default {
     defaultSourceRate: 'USD',
     defaultTargetRate: 'ILS',
     defaultTodayRates: ['EUR', 'GBP', 'CAD', 'MXN', 'JPY'],
-    roundStep: 0.05,
+    amountStep: 0.05,
+    ratioStep: 0.0001,
 }
