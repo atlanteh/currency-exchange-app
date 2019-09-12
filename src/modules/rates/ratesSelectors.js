@@ -68,7 +68,7 @@ export const selectedHistoryRangeSelector = createSelector(historyToggleSelector
         }
         const sourceKey = source.currency;
         const targetKey = target.currency;
-        const result = Object.keys(range).map(key => {
+        const result = Object.keys(range).sort().map(key => {
             const item = range[key];
             const ratio = roundCurrency(item[targetKey] / item[sourceKey], config.ratioStep);
             return {key, ratio};
