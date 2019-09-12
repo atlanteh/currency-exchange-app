@@ -12,7 +12,7 @@ export const selectedSourceSelector = createSelector(sliceSelector, slice => sli
 export const selectedtargetSelector = createSelector(sliceSelector, slice => slice.selectedRates.target);
 
 export const ratesSelector = createSelector(ratesMapSelector, rates => {
-    const ratesResult = Object.keys(rates).map(k => ({
+    const ratesResult = Object.keys(rates).sort().map(k => ({
         currency: k,
         rate: rates[k]
     }))
