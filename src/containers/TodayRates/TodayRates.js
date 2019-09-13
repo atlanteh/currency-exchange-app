@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, AppBar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import Flag from 'components/Flag';
+import CurrencyFlag from 'components/CurrencyFlag';
 
 const useStyles = makeStyles(theme => ({
   bar: {
@@ -33,9 +33,6 @@ const useStyles = makeStyles(theme => ({
     width: 33,
     height: 22,
   },
-  currencyWrap: {
-    display: 'inline-flex',
-  }
 }));
 
 function TodayRates({className, sourceRate, todaysRates}) {
@@ -51,10 +48,7 @@ function TodayRates({className, sourceRate, todaysRates}) {
       <Container className={classes.ratesWrapper}>
         {todaysRates.map(r => (
           <Container key={r.currency} className={classes.row}>
-            <span className={classes.currencyWrap}>
-              <Flag currency={r.currency} className={classes.flag} />
-              {r.currency}
-            </span>
+            <CurrencyFlag currency={r.currency} classes={{flag: classes.flag}} />
             <span>
               {r.rate}
             </span>

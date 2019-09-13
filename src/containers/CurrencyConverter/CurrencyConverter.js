@@ -2,8 +2,8 @@ import React from 'react';
 import { Container, TextField, Grid, Select, MenuItem, Divider, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import Flag from 'components/Flag';
 import config from 'config/config';
+import CurrencyFlag from 'components/CurrencyFlag';
 
 const useStyles = makeStyles(theme => ({
   container:  {
@@ -36,9 +36,6 @@ const useStyles = makeStyles(theme => ({
   divider: {
       margin: '30px 0px',
   },
-  flag: {
-    marginRight: 10,
-  },
 }));
 
 function CurrencyFieldset({rates, title, className, onChange, value, amountReadOnly}) {
@@ -54,16 +51,13 @@ function CurrencyFieldset({rates, title, className, onChange, value, amountReadO
           >
             <Grid item xs={4}>
                 <TextField
-                    value={amount}
+                    value={amount || 0}
                     onChange={(e) => onChange({...value, amount: e.target.value})}
                     variant="outlined"
                     label={title}
                     type="number"
                     className={classes.textField}
-                    InputProps={{
-                        readOnly: amountReadOnly,
-                    }}
-                    inputProps={{step: config.amountStep}}
+                    inputProps={{step: config.amountStep, readOnly: amountReadOnly,}}
                     InputLabelProps={{
                         shrink: true,
                     }}
@@ -71,15 +65,14 @@ function CurrencyFieldset({rates, title, className, onChange, value, amountReadO
             </Grid>
             <Grid item xs={8}>
                 <Select
-                    value={currency}
+                    value={currency || ''}
                     onChange={(e) => onChange({...value, currency: e.target.value})}
                     variant="outlined"
                     className={classes.select}
                 >
                     {rates.map(r => (
                       <MenuItem key={r.currency} value={r.currency}>
-                        <Flag className={classes.flag} currency={r.currency} />
-                        {r.currency}
+                        <CurrencyFlag currency={r.currency} />
                       </MenuItem>
                     ))}
                 </Select>
