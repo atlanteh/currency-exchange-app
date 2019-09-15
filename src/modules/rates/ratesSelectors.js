@@ -85,7 +85,8 @@ export const todaysRatesCurrencieSelector = createSelector(selectedSourceSelecto
         const currencies = defatulRates.map(r => r === source.currency ? 'USD' : r);
 
         if (source.currency !== 'ILS' && target.currency !== 'ILS') {
-            currencies[currencies.length - 1] = 'ILS'
+            currencies.unshift('ILS');
+            currencies.pop();
         }
         return currencies;
     }
