@@ -27,7 +27,7 @@ export default (state = initialValue, action) => {
         nextState = {
             ...state,
             loadingRates: false,
-            rates: {...payload.rates, EUR: 1},
+            rates: payload,
             lastUpdate: new Date(payload.date)
         };
         break;

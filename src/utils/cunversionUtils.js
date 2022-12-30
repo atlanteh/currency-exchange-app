@@ -6,5 +6,5 @@ export const floorCurrency = (value, step) => manipulateCurrency(value, step, Ma
 export const roundCurrency = (value, step) => manipulateCurrency(value, step, Math.round);
 
 export function formatDateLexicographically(date) {
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    return date.toISOString().slice(0, 10)
 }

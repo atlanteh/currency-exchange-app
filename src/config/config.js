@@ -1,5 +1,5 @@
 export default {
-    serverBaseUrl: 'https://api.exchangeratesapi.io',
+    serverBaseUrl: 'https://api.freecurrencyapi.com/v1',
     defaultSourceRate: 'USD',
     defaultTargetRate: 'ILS',
     defaultTodayRates: ['EUR', 'GBP', 'CAD', 'MXN', 'JPY'],

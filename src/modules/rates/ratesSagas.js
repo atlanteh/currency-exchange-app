@@ -9,9 +9,9 @@ import { formatDateLexicographically } from 'utils/cunversionUtils';
 function* fetchRates() {
     yield put(Actions.FETCH_RATES_REQUEST());
     try {
-        const {data} = yield call(axios.get, 'latest');
+        const {data} = yield call(axios.get, 'latest?base_currency=EUR');
         
-        yield put(Actions.FETCH_RATES_SUCCESS(data));
+        yield put(Actions.FETCH_RATES_SUCCESS(data.data));
     } catch (err) {
         console.error(err);
         yield put(Actions.FETCH_RATES_FAILURE(err));
@@ -34,17 +34,22 @@ function* fetchHistoryRange() {
         const monthsBackCount = yield select(Selectors.historyToggleSelector);
         const symbols = `${source.currency},${target.currency}`
         const endAt = new Date();
+        endAt.setDate(endAt.getDate() - 1)
+
         const startAt = new Date(endAt.getFullYear(), endAt.getMonth() - monthsBackCount, endAt.getDate());
 
         const params = {
-            symbols,
-            start_at: formatDateLexicographically(startAt),
-            end_at: formatDateLexicographically(endAt),
+            base_currency: source.currency,
+
+            currencies: target.currency,
+            date_from: formatDateLexicographically(startAt),
+            date_to: formatDateLexicographically(endAt),
         }
-        const {data} = yield call(axios.get, 'history', {params});
-        
+        const {data} = yield call(axios.get, 'historical', {params});
+
+        const historicalRates = Object.keys(data.data).map(key => ({key, rate: data.data[key][target.currency]}))
         const key = symbols + monthsBackCount;
-        yield put(Actions.FETCH_HISTORY_RANGE_SUCCESS({rates: data.rates, key}));
+        yield put(Actions.FETCH_HISTORY_RANGE_SUCCESS({rates: historicalRates, key}));
     } catch (err) {
         console.error(err);
         yield put(Actions.FETCH_HISTORY_RANGE_FAILURE(err));
